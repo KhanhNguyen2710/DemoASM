@@ -1,8 +1,89 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<DemoASM.Models.Book>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+	ViewData["Title"] = "Home";
+}
+<h1>Our Product</h1>
+<form asp-action="Index" method="get">
+	<div class="form-actions text-center">
+		<p>
+			Find by title: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+			<input type="submit" value="Search" class="btn btn-success" />
+			<a class="btn btn-success" asp-action="Index">Back to List</a>
+		</p>
+	</div>
+</form>
+<div class="row ">
+	@foreach (var item in Model)
+	{
+		<div class="col-md-3">
+			@if   (item.ImgUrl.StartsWith("https://"))									
+					{
+						<img  class="card-img-top p-3" src="@(item.ImgUrl)" asp-append-version="true" width="200px" height="300px">
+					}
+					else
+					{
+						<img class="card-img-top p-3" src="@("~/image/" + item.ImgUrl)" asp-append-version="true" width="250px" height="250px">
+					}
+			<div class="card-body">
+				<h4 class="card-title">Title: @item.Title</h4>
+				<h6 class="card-title">Category: @item.Category</h6>
+				<a asp-action="Details" asp-route-id="@item.Isbn" class="btn btn-success">Details</a>
+				
+			</div>
+		</div>
+	}
+</div>
+ <div style="display:flex;text-align:center;justify-content:center;">
+      <nav aria-label="Page navigation ">
+          <ul class="pagination">
+              @for (var i = 0; i < @ViewBag.numberOfPages; i++)
+              {
+                  var style = (@ViewBag.currentPage == @i) ? "active" : "";
+                  <li class="page-item @style">
+                      <a class="page-link" asp-action="Index" asp-route-id="@i"
+                      asp-route-SearchString = "@ViewData["CurrentFilter"]">@(i+1)</a>
+                  </li>
+              }
+          </ul>
+      </nav>
+  </div>
+
+
+<div class="container">
+	@*@if(pager.TotalPages > 0)
+	{
+		<ul class="pagination justify-content-center">
+			@if (pager.CurrentPage - 1 > 0 )
+			{
+				<li class="page-item">
+					<a class="page-link" asp-route-id="1" asp-route-SearchString=@ViewData["CurrentFilter"]>First</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-route-id=@(pager.CurrentPage - 1) asp-route-SearchString=@ViewData["CurrentFilter"]>Previous</a>
+				</li>				
+			}
+
+			@for (var i = pager.StartPage; i <= pager.EndPage; i++)
+			{
+				<li class="page-item @(i == pager.CurrentPage ? "active" : "")">
+					<a class="page-link" 
+						asp-route-id=@i 
+						asp-route-SearchString=@ViewData["CurrentFilter"]
+					>@i</a>
+				</li>
+			}
+
+			@if(pager.CurrentPage + 1 <= pager.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-route-id=@(pager.CurrentPage + 1) asp-route-SearchString=@ViewData["CurrentFilter"]>Next</a>
+				</li>
+
+				<li class="page-item">
+					<a class="page-link" asp-route-id=@(pager.EndPage) asp-route-SearchString=@ViewData["CurrentFilter"]>Last</a>
+				</li>
+			}
+		</ul>
+	}*@
 </div>

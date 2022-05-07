@@ -3,12 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using DemoASM.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using DemoASM.Email;
+using DemoASM.Models;
+using DemoASM.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UserContextConnection");;
 
 builder.Services.AddDbContext<UserContext>(options =>
     options.UseSqlServer(connectionString));;
+
+builder.Services.AddDbContext<DemoASMContext>(options =>
+    options.UseSqlServer(connectionString)); ;
 
 builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
