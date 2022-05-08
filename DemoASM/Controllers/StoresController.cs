@@ -112,6 +112,7 @@ namespace DemoASM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StoreId,Name,UserId,Phone")] Store store)
         {
+           
             if (id != store.StoreId)
             {
                 return NotFound();
@@ -139,6 +140,7 @@ namespace DemoASM.Controllers
             }
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", store.UserId);
             return View(store);
+
         }
 
         // GET: Stores/Delete/5
