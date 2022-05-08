@@ -24,5 +24,6 @@ namespace DemoASM.Models
         public virtual Store? Store { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
     }
 }

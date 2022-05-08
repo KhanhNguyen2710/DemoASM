@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DemoASM.Models.Cart>
+
+@*@{
+    ViewData["Title"] = "Index";
+}*@
+
+<h2>Cart</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th> Title </th>
+            <th> Price </th>
+            <th>
+                Total
+            </th>
+            <th>Quantity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cartitem in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => cartitem.IsbnNavigation.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cartitem.IsbnNavigation.Price)
+                </td>
+              
+                <td>
+                    <a asp-controller="Carts" asp-action="Delete" asp-route-BookIsbn="@cartitem.Isbn">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<p class="text-align-right">Total bill: @ViewBag.totalPrice</p>
+<a asp-controller="Carts" asp-action="Checkout">Checkout</a>

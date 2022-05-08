@@ -10,6 +10,7 @@ namespace DemoASM.Models
         public int? Quantity { get; set; }
 
         public virtual Book IsbnNavigation { get; set; } = null!;
+        //  IsbnNavigation just name liên kêt vs book
         public virtual AspNetUser User { get; set; } = null!;
     }
 }
