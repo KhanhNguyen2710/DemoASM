@@ -1,44 +1,72 @@
-﻿@model IEnumerable<DemoASM.Models.Cart>
+﻿@model List<DemoASM.Models.Cart>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h2>GIỎ HÀNG</h2>
 
-<h2>Cart</h2>
+@if (Model.Count > 0) {
+  decimal total = 0; // số thập phân
+  int stt = 1;
+  
+  <table class="table">
+    <tr>
+      <th>#</th>
+      <th>Sản phẩm</th>
+      <th>Giá</th>
+      <th>Số lượng</th>
+      <th>Thành tiền</th>
+      <th></th>
+    </tr>
+    @foreach (var cartitem in Model)
+    {
+        var thanhtien = cartitem.Quantity * cartitem.IsbnNavigation.Price;
+      //  total += thanhtien ;
 
-<p>
-    <a asp-controller="Books" asp-action="Index">Buy Now</a>
-</p>
-<table class="table">
-    <thead>
         <tr>
-            <th> Title </th>
-            <th> Price </th>
-            <th>
-                Total
-            </th>
-            <th>Quantity</th>
-            <th></th>
+           <td>@(stt++)</td>
+           <td>@cartitem..IsbnNavigation.Title</td>
+           <td>@(cartitem.IsbnNavigation.Price)</td>
+           <td><input asp-for="@cartitem.Quantity" id="@($"quantity-{cartitem.IsbnNavigation.Isbn}")"/></td>
+           <td>@(thanhtien)</td>
+           <td>
+              <button class="btn btn-success updatecartitem" 
+                    data-isbn="@cartitem.IsbnNavigation.Isbn">Cập nhật</button>
+              <a  asp-action="RemoveCart" asp-route-isbn="@cartitem.IsbnNavigation.Isbn"
+                class="btn btn-danger">Xóa</a>
+           </td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsbnNavigation.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsbnNavigation.Price)
-                </td>
-              
-                <td>
-                    <a asp-controller="Carts" asp-action="Delete" asp-route-BookIsbn="@item.Isbn">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+    }
+      <tr>
+          <td colspan="4" class="text-right">Tổng tiền</td>
+          <td>@(total)</td>
+          <td></td>
+      </tr>
+  </table>
 
-</table>
-<p class="text-align-right">Total bill: @ViewBag.totalPrice</p>
-<a asp-controller="Carts" asp-action="Checkout">Checkout</a>
+  <a asp-controller="Product" asp-action="Checkout" class="btn btn-success">Gửi đơn hàng</a>
+
+      @section Scripts {
+        <script>
+          $(document).ready(function () {
+              $(".updatecartitem").click(function (event) {
+                  event.preventDefault();
+                  var productid = $(this).attr("data-productid");
+                  var quantity = $("#quantity-" + productid).val();
+                  $.ajax({
+                      type: "POST",
+                      url:"@Url.RouteUrl("updatecart")",
+                      data: {
+                          productid: productid,
+                          quantity:quantity
+                      },
+                      success: function (result) {
+                          window.location.href = "@Url.RouteUrl("cart")";
+                      }
+                  });
+              });
+          });
+        </script>
+      }
+
+}
+else {
+  <p class="alert alert-danger">Giỏ hàng trống</p>
+}

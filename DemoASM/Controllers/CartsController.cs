@@ -27,11 +27,11 @@ namespace DemoASM.Controllers
 
 
         // GET: Carts
-        public async Task<IActionResult> Index()
+        /*public async Task<IActionResult> Index()
         {
             var demoASMContext = _context.Carts.Include(c => c.IsbnNavigation).Include(c => c.User);
             return View(await demoASMContext.ToListAsync());
-        }
+        }*/
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(string id)
@@ -52,44 +52,83 @@ namespace DemoASM.Controllers
 
             return View(cart);
         }
-       /* public IActionResult Cart()
-        {
-            var user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var carts = _context.Carts.Where(c => c.UserId == user).Include(c => c.IsbnNavigation).ToList();
-            return View(carts);
-        }*/
+      
         public IActionResult AddToCart (string isbn)
         {
             var user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //var carts = _context.Carts.Where(c => c.UserId == user).Include(c => c.IsbnNavigation).ToList();
             var book = _context.Books
                 .Where(p => p.Isbn == isbn)
                 .FirstOrDefault();
             if (book == null)
                 return NotFound("Không có sản phẩm");
 
-            // Xử lý đưa vào Cart ...
+            // Xử lý đưa vào Cart
             var cart = GetCart();
-            var cartitem = cart.Find(p => p.Isbn == isbn);
-            if (cartitem != null)
+            var item = cart.Find(p => p.Isbn == isbn); // cart item
+            if (item != null)
             {
-                // Đã tồn tại, tăng thêm 1
-                cartitem.Quantity++;
-                _context.Update(cartitem);
+                
+                item.Quantity++; // thêm số lượng sản phẩm
+                _context.Update(item);
                 _context.SaveChanges();
             }
             else
             {
-                Cart newCartItem = new Cart()
+                Cart newItem = new Cart()
                 {
                     UserId = user,
                     Isbn = isbn,
                     Quantity = 1
                 };
-                SaveCart(newCartItem);
+                SaveCart(newItem);
             }
-            return RedirectToAction(nameof(Cart));
+            return RedirectToAction(nameof(Cart)); // (index)
         }
+        public IActionResult Cart() // index
+        {
+            var user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var carts = _context.Carts.Where(c => c.UserId == user).Include(c => c.IsbnNavigation).ToList();
+            return View(carts);
+        }
+        /// Cập nhật
+
+        /* .........................Update..............................*/
+        [Route("/updatecart", Name = "updatecart")]
+        [HttpPost]
+        public IActionResult UpdateCart([FromForm] string isbn, [FromForm] int quantity)
+        {
+            // Cập nhật Cart thay đổi số lượng quantity ...
+            var cart = GetCart();
+            var cartitem = cart.Find(p => p.IsbnNavigation.Isbn == isbn);
+            if (cartitem != null)
+            {
+               
+                cartitem.Quantity = quantity;
+                _context.Update(cartitem);
+                _context.SaveChanges();
+
+            }
+
+            
+            return Ok();
+        }
+       /* ......................Remove..............................*/
+        public IActionResult RemoveCart(string isbn)
+        {
+            var cart = GetCart();
+            var cartitem = cart.Find(p => p.IsbnNavigation.Isbn == isbn);
+            if (cartitem != null)
+            {
+                // Đã tồn tại, tăng thêm 1
+               _context.Carts.Remove(cartitem);
+                _context.SaveChanges();
+
+            }
+          
+
+            return RedirectToAction(nameof(Cart));//Index
+        }
+
         List<Cart> GetCart()
         {
             var user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -100,9 +139,9 @@ namespace DemoASM.Controllers
             }
             return new List<Cart>();
         }
-        void SaveCart(Cart ls)
+        void SaveCart(Cart sv)
         {
-            _context.Add(ls);
+            _context.Add(sv);
             _context.SaveChanges();
 
         }
