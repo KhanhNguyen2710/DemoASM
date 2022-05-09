@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoASM.Data;
 using DemoASM.Models;
+using System.Security.Claims;
 
 namespace DemoASM.Controllers
 {
     public class BooksController : Controller
     {
         private readonly DemoASMContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BooksController(DemoASMContext context)
+
+        public BooksController(DemoASMContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Books
@@ -49,8 +53,15 @@ namespace DemoASM.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["StoreId"] = new SelectList(_context.Stores, "StoreId", "StoreId");
+
+            Book book = new Book();
+            // var store = _context.Stores.ToList();
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            ViewBag.StoreId = new SelectList(_context.Stores.Where(c => c.UserId == userId), "StoreId", "StoreId");
+
             return View();
+
         }
 
         // POST: Books/Create
@@ -58,16 +69,33 @@ namespace DemoASM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Isbn,Title,Author,Category,Pages,Price,Description,ImgUrl,StoreId")] Book book)
+        public async Task<IActionResult> Create([Bind("Isbn,Title,Author,Category,Price,ImgUrl,Pages,Description,StoreId")] Book book, IFormFile image)
         {
+            
+            if (image != null)
+            {
+                string imgName = book.Isbn + Path.GetExtension(image.FileName);
+                string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image", imgName);
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    image.CopyTo(stream);
+                }
+                book.ImgUrl = imgName;
+            }
+            else
+            {
+                return View(book);
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StoreId"] = new SelectList(_context.Stores, "StoreId", "StoreId", book.StoreId);
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewData["StoreId"] = new SelectList(_context.Stores.Where(c => c.User.Id == userId), "Id", "Id");
             return View(book);
+
         }
 
         // GET: Books/Edit/5
