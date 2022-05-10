@@ -1,0 +1,49 @@
+﻿@model List<DemoASM.Models.Cart>
+
+<h2>GIỎ HÀNG</h2>
+
+@if (Model.Count > 0)
+{
+    double? total = 0; // số thập phân
+    int stt = 1;
+
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Quantity</th>
+            <th>Price</th>
+		
+            <th></th>
+        </tr>
+        @foreach (var cartitem in Model)
+		{
+			var tong = cartitem.Quantity * cartitem.IsbnNavigation.Price;
+			total = total + tong;
+			<tr>
+				<td>@(stt++)</td>				
+				<td>@cartitem.IsbnNavigation.Title</td>
+				<td>@(cartitem.Quantity)</td>				
+				<td>@(tong)</td>
+
+				
+			</tr>
+		}
+		
+	</table>
+
+		<div class="col-12 col-sm-5" style="margin-left:50%">
+			<div class="row my-2 align-content-end">
+				<div class="col-7 text-right fw-bold">SubTotal</div>
+					<div class="col-5">
+						<span class="text-120 text-secondary-d1">@total</span>
+					</div>
+			</div>
+		</div>
+	<a asp-controller="Orders" asp-action="Buy" class="btn btn-success"> Buy</a>
+	
+}
+else
+{
+	<p class="alert alert-danger">Giỏ hàng trống</p>
+}

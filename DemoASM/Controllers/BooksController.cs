@@ -1,4 +1,4 @@
-﻿#nullable disable
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using DemoASM.Data;
 using DemoASM.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DemoASM.Controllers
 {
+    [Authorize(Roles = "Seller")]
     public class BooksController : Controller
     {
         private readonly DemoASMContext _context;
@@ -53,8 +55,24 @@ namespace DemoASM.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
+            Book book = new Book()
+            {
+               /* CategoryList = new List<SelectListItem> {
+                    new SelectListItem { Value = "psychology", Text = "psychology" },
+                    new SelectListItem { Value = "fiction", Text = "fiction" },
+                    new SelectListItem { Value = "computer_science", Text = "computer_science" },
+                    new SelectListItem { Value = "nonfiction", Text = "nonfiction" },
+                    new SelectListItem { Value = "comic", Text = "comic" },
+                    new SelectListItem { Value = "philosophy", Text = "philosophy" },
+                    new SelectListItem { Value = "data_science", Text = "data_science" },
+                    new SelectListItem { Value = "mathematics", Text = "mathematics" },
+                    new SelectListItem { Value = "economics", Text = "economics" },
+                    new SelectListItem { Value = "history", Text = "history" },
+                    new SelectListItem { Value = "science", Text = "science" }
 
-            Book book = new Book();
+                }*/
+            };
+
             // var store = _context.Stores.ToList();
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

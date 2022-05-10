@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 
 namespace DemoASM.Models
@@ -24,6 +25,6 @@ namespace DemoASM.Models
         public virtual Store? Store { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-
+       /* public List<SelectListItem> CategoryList { get;  set; }*/
     }
 }
