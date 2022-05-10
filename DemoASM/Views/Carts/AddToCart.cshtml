@@ -1,41 +1,64 @@
-﻿@model IEnumerable<DemoASM.Models.Cart>
+﻿@model List<DemoASM.Models.Cart>
 
-@*@{
-    ViewData["Title"] = "Index";
-}*@
+<h2>My Cart</h2>
 
-<h2>Cart</h2>
-
-<table class="table">
-    <thead>
+@if (Model.Count > 0) {
+  int stt = 1;
+  
+  <table class="table">
+    <tr>
+      <th>#</th>
+      <th>Book</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Subtotal</th>
+      <th></th>
+    </tr>
+   @foreach (var cartitem in Model)
+    {
+    @*   var tong = cartitem.Quantity * cartitem.IsbnNavigation.Price;*@
         <tr>
-            <th> Title </th>
-            <th> Price </th>
-            <th>
-                Total
-            </th>
-            <th>Quantity</th>
-            <th></th>
+           <td>@(stt++)</td>
+           <td>@cartitem.IsbnNavigation.Title</td>
+           <td>@(cartitem.IsbnNavigation.Price)</td>
+           <td><input asp-for="@cartitem.Quantity" id="@($"quantity-{cartitem.IsbnNavigation.Isbn}")"/></td>
+         @*  <td>@(tong)</td>*@
+           <td>
+              <button class="btn btn-success " 
+                    data-isbn="@cartitem.IsbnNavigation.Isbn">Update</button>
+              <a asp-route="removecart" asp-route-isbn="@cartitem.IsbnNavigation.Isbn"
+                class="btn btn-danger btn-pressure pull-left">Delete</a>
+           </td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var cartitem in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => cartitem.IsbnNavigation.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => cartitem.IsbnNavigation.Price)
-                </td>
-              
-                <td>
-                    <a asp-controller="Carts" asp-action="RemoveCart" asp-route-isbn="@cartitem.Isbn">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+    }
+  </table>
 
-</table>
-<p class="text-align-right">Total bill: @ViewBag.totalPrice</p>
-<a asp-controller="Carts" asp-action="Checkout">Checkout</a>
+  <a asp-controller="Orders" asp-action="Checkout" class="btn btn-info btn-pressure pull-left">Gửi đơn hàng</a>
+
+      @section Scripts {
+        <script>
+          $(document).ready(function () {
+              $(".updatecartitem").click(function (event) {
+                  event.preventDefault();
+                  var isbn = $(this).attr("data-isbn");
+                  var quantity = $("#quantity-" + isbn).val();
+                  $.ajax({
+                      type: "POST",
+                      url:"@Url.RouteUrl("updatecart")",
+                      data: {
+                          isbn: isbn,
+                          quantity:quantity
+                      },
+                      success: function (result) {
+                          window.location.href = "@Url.RouteUrl("cart")";
+                      }
+                  });
+              });
+          });
+        </script>
+      }
+
+}
+else {
+  <p class="alert alert-danger">Giỏ hàng trống</p>
+}u
