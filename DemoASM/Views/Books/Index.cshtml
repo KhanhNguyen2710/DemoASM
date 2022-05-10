@@ -1,40 +1,40 @@
 ﻿@model IEnumerable<DemoASM.Models.Book>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Book Management";
 }
 
 <h1>Book Management</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New book</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Title) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                @Html.DisplayNameFor(model => model.Author) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.Category) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pages)
+                @Html.DisplayNameFor(model => model.Pages) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Price) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Description) 
             </th>
             <th>
-                 @Html.DisplayNameFor(model => model.ImgUrl)
+                 @Html.DisplayNameFor(model => model.ImgUrl) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Store)
+                @Html.DisplayNameFor(model => model.Store) 
             </th>
             <th></th>
         </tr>

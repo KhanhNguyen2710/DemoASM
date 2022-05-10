@@ -84,7 +84,7 @@ namespace DemoASM.Controllers
 
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Isbn,Title,Author,Category,Price,ImgUrl,Pages,Description,StoreId")] Book book, IFormFile image)
@@ -154,7 +154,7 @@ namespace DemoASM.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.Isbn))
+                    if (!BookExistences(book.Isbn))
                     {
                         return NotFound();
                     }
@@ -199,7 +199,7 @@ namespace DemoASM.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(string id)
+        private bool BookExistences(string id)
         {
             return _context.Books.Any(e => e.Isbn == id);
         }
