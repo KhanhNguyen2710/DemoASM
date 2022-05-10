@@ -42,7 +42,7 @@ namespace DemoASM.Controllers
             }
 
             var cart = await _context.Carts
-                .Include(c => c.IsbnNavigation)
+                .Include(i => i.IsbnNavigation)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (cart == null)
@@ -94,7 +94,7 @@ namespace DemoASM.Controllers
 
         }
 
-
+//........................Tăng số lượng sản phẩm có sẵn.......................................................
         [Route("/updatecart", Name = "updatecart")]
         [HttpPost]
         public IActionResult UpdateCart([FromForm] string isbn, [FromForm] int quantity)
@@ -111,6 +111,7 @@ namespace DemoASM.Controllers
             }
             return Ok();
         }
+//........................Giảm số lượng sản phẩm có sẵn.......................................................
 
         [Route("/minuscart", Name = "minuscart")]
         [HttpPost]
