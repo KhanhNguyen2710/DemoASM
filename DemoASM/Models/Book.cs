@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoASM.Models
 {
@@ -25,6 +26,7 @@ namespace DemoASM.Models
         public virtual Store? Store { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-       /* public List<SelectListItem> CategoryList { get;  set; }*/
+        [NotMapped]
+        public List<SelectListItem>? CategoryList { get; internal set; }
     }
 }

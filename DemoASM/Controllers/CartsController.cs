@@ -13,7 +13,7 @@ using System.Security.Claims;
 
 namespace DemoASM.Controllers
 {
-    [Authorize(Roles = "Customer")]
+  /*  [Authorize(Roles = "Customer")]*/
     public class CartsController : Controller
     {
         private readonly DemoASMContext _context;

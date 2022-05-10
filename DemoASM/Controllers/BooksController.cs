@@ -57,7 +57,7 @@ namespace DemoASM.Controllers
         {
             Book book = new Book()
             {
-               /* CategoryList = new List<SelectListItem> {
+                CategoryList = new List<SelectListItem> {
                     new SelectListItem { Value = "psychology", Text = "psychology" },
                     new SelectListItem { Value = "fiction", Text = "fiction" },
                     new SelectListItem { Value = "computer_science", Text = "computer_science" },
@@ -70,7 +70,7 @@ namespace DemoASM.Controllers
                     new SelectListItem { Value = "history", Text = "history" },
                     new SelectListItem { Value = "science", Text = "science" }
 
-                }*/
+                }
             };
 
             // var store = _context.Stores.ToList();
@@ -78,7 +78,7 @@ namespace DemoASM.Controllers
 
             ViewBag.StoreId = new SelectList(_context.Stores.Where(c => c.UserId == userId), "StoreId", "StoreId");
 
-            return View();
+            return View(book);
 
         }
 

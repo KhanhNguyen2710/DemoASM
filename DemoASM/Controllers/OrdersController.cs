@@ -66,6 +66,7 @@ namespace DemoASM.Controllers
                             OrderId = myOrder.OrderId,
                             Isbn = item.Isbn,
                             Quantity = item.Quantity,
+                          
                         };
                         _context.Add(detail);
                     }
@@ -97,10 +98,20 @@ namespace DemoASM.Controllers
 
         }
 
+          public async Task<IActionResult> ViewOrder()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            List<Order> myOrder = await _context.Orders
+                .Include(od => od.OrderDetails)
+               .Where(c => c.UserId == userId)     
+               .ToListAsync();
 
-        private bool OrderExists(int id)
+            return View(myOrder);
+        }
+
+      /*  private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
-        }
+        }*/
     }
 }

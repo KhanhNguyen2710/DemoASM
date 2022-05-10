@@ -1,0 +1,56 @@
+﻿@model List<DemoASM.Models.Order>
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Index</h1>
+@foreach(var item in @Model){
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Books
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price 1 product
+            </th>
+            <th>
+                Unit Price
+            </th>
+            <th>
+                Category
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var detail in @item.OrderDetails)
+            {
+                <tr>
+                    <td>
+                       @detail.IsbnNavigation.Title                      
+                    </td>
+                    <td>
+                       @detail.Quantity                   
+                    </td>
+                    <td>
+                       @detail.IsbnNavigation.Price                 
+                    </td>
+                    <td>
+                       @(detail.Quantity * detail.IsbnNavigation.Price)                
+                    </td>
+                    <td>
+                        <a asp-controller="Books" asp-action="Details" asp-route-id="@detail.IsbnNavigation.Isbn">Infor Book</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+}
