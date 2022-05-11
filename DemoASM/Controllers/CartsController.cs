@@ -121,7 +121,7 @@ namespace DemoASM.Controllers
             var cartitem = cart.Find(p => p.Isbn == isbn);
             if (cartitem != null)
             {
-                // Đã tồn tại, tăng thêm 1
+                // Đã tồn tại, giảm 1 sản phẩm
                 cartitem.Quantity--;
                 _context.Update(cartitem);
                 _context.SaveChanges();
