@@ -57,6 +57,7 @@ namespace DemoASM.Controllers
         }
 
         public IActionResult Cart()
+<<<<<<< HEAD
         {
             var currentId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var carts = _context.Carts.Where(u => u.UserId == currentId).Include(c => c.IsbnNavigation).ToList();
@@ -67,6 +68,18 @@ namespace DemoASM.Controllers
         public IActionResult AddToCart (string isbn)
         {
             var currentId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+=======
+        {
+            var currentId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var carts = _context.Carts.Where(c => c.UserId == currentId).Include(c => c.IsbnNavigation).ToList();
+            return View(carts);
+        }
+
+
+        public IActionResult AddToCart(string isbn)
+        {
+            var currentId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
             var book = _context.Books
                 .Where(p => p.Isbn == isbn)
                 .FirstOrDefault();
@@ -76,9 +89,16 @@ namespace DemoASM.Controllers
             // Xử lý đưa vào Cart ...
             var cart = GetCart();
             var cartitem = cart.Find(p => p.Isbn == isbn);
+<<<<<<< HEAD
             if (cartitem != null) // Tăng số lượng khi sản phẩm >= 1
             {
                 cartitem.Quantity++; 
+=======
+            if (cartitem != null)
+            {
+                // Đã tồn tại, tăng thêm 1
+                cartitem.Quantity++;
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
                 _context.Update(cartitem);
                 _context.SaveChanges();
             }
@@ -96,9 +116,12 @@ namespace DemoASM.Controllers
 
         }
 
+<<<<<<< HEAD
 
 //.................... Điều chỉnh tăng số lượng sản phẩm..............................................
 
+=======
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
 
         [Route("/updatecart", Name = "updatecart")]
         [HttpPost]
@@ -117,18 +140,30 @@ namespace DemoASM.Controllers
             return Ok();
         }
 
+<<<<<<< HEAD
  //...................... Điều chỉnh giảm số lượng sản phẩm..............................................
 
 
+=======
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
         [Route("/minuscart", Name = "minuscart")]
         [HttpPost]
         public IActionResult minusCart([FromForm] string isbn, [FromForm] int quantity)
         {
+<<<<<<< HEAD
             var cart = GetCart();
             var cartitem = cart.Find(p => p.Isbn == isbn); 
             if (cartitem != null)
             {
                 // Đã tồn tại, giảm thêm 1
+=======
+            // Cập nhật Cart thay đổi số lượng quantity ...
+            var cart = GetCart();
+            var cartitem = cart.Find(p => p.Isbn == isbn);
+            if (cartitem != null)
+            {
+                // Đã tồn tại, giảm 1 sản phẩm
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
                 cartitem.Quantity--;
                 _context.Update(cartitem);
                 _context.SaveChanges();
@@ -136,7 +171,11 @@ namespace DemoASM.Controllers
             return Ok();
         }
 
+<<<<<<< HEAD
 //.....................Xoá sách.......................................................
+=======
+
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
         public IActionResult RemoveCart(string isbn)
         {
             var cart = GetCart();
@@ -151,7 +190,12 @@ namespace DemoASM.Controllers
             return RedirectToAction(nameof(Cart));
         }
 
+<<<<<<< HEAD
    
+=======
+
+
+>>>>>>> adab3d1ad6ce5053aad678850ad99e30f6029ff0
         List<Cart> GetCart()
         {
             var currentId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
