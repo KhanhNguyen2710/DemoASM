@@ -109,9 +109,6 @@ namespace DemoASM.Controllers
             return View(myOrder);
         }
 
-      /*  private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.OrderId == id);
-        }*/
+    
     }
 }

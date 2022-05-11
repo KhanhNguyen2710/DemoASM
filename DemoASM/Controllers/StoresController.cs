@@ -13,7 +13,7 @@ using DemoASM.Data;
 
 namespace DemoASM.Controllers
 {
-    [Authorize(Roles = "Seller")]
+    [Authorize(Roles = "Seller")] // -> program.cs -> 
     public class StoresController : Controller
     {
         private readonly DemoASMContext _context;
